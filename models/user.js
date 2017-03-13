@@ -15,6 +15,9 @@ var User = mongoose.model('User',{
     type:String,
     require:true
   },
+  contactNo:{
+    type:String
+  },
   userGroup:{
     type:Number,
   },
@@ -35,14 +38,10 @@ var User = mongoose.model('User',{
   lastModified:{
     type:Date
   },
-  contactNo:{
-    type:String
-  },
   status:{
     type:Number,
     default:1
   }
-
 });
 
 

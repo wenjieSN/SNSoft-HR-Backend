@@ -6,7 +6,6 @@ const mongoose = require('./server/dbConnect');
 const User = require('./models/user').User;
 const Department = require('./models/department').Department;
 
-
 var app = express();
 
 app.use(bodyParser.json());
