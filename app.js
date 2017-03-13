@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser'); //json -> object
+const ObjectID = require('mongodb').ObjectID;
 
 const mongoose = require('./server/dbConnect');
 const User = require('./models/user').User;
@@ -9,6 +10,12 @@ const Department = require('./models/department').Department;
 var app = express();
 
 app.use(bodyParser.json());
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 
 //post user
 app.post('/user', (req, res) => {
