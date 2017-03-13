@@ -33,9 +33,14 @@ var User = mongoose.model('User',{
     require:true
   },
   lastModified:{
-    type:Date
+    type:Date,
+    default:Date.now,
+    require:true
   },
   contactNo:{
+    type:String
+  },
+  indexID:{
     type:String
   },
   status:{
