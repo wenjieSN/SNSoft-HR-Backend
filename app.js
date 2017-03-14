@@ -21,7 +21,9 @@ app.use(function(req, res, next) {
 //post user
 app.post('/user', (req, res) => {
 
-  var userData = req.body;
+  console.log(req.body);
+
+  var userData = [req.body];
   var newUser = [];
 
   userData.forEach((user) => {
