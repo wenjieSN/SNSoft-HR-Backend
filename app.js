@@ -93,9 +93,7 @@ app.get('/user/:id',(req,res)=>{
     if(!user){
       return res.status(404).send();
     }
-    res.send({
-      user
-    });
+    res.send({user});
   },(e)=>{
       res.status(400).send(e);
   });
