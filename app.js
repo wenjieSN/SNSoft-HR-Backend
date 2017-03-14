@@ -34,7 +34,9 @@ app.post('/user', (req, res) => {
        department:user.department,
        position:user.position,
        supervisor:user.supervisor,
-       contactNo:user.contctNo
+       contactNo:user.contctNo,
+       status:user.status,
+       indexID:user.indexID
       })
     );
   },(err) =>{
@@ -96,7 +98,8 @@ app.patch('/user/:id',(req,res)=>{
     'position',
     'supervisor',
     'contactNo',
-    'lastModified'
+    'lastModified',
+    'status'
   ]);
 
   User.findByIdAndUpdate(id,{$set:body},{new:true}).then((updatedUser) => {
@@ -108,33 +111,6 @@ app.patch('/user/:id',(req,res)=>{
     res.status(400).send();
   })
 });
-
-//post department
-app.post('/department', (req, res) => {
-  var department = new Department({
-    name:req.body.name,
-    head:req.body.head
-  });
-
-  user.save().then((doc) => {
-    res.send(doc);
-  }, (e) => {
-    res.status(400).send(e);
-  });
-});
-
-//get department
-app.get('/department',(req,res)=>{
-  User.find().then((departments)=>{
-    res.send({
-      departments
-    });
-  },(e)=>{
-      res.status(400).send(e);
-  });
-});
-
-
 
 
 
