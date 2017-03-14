@@ -18,11 +18,20 @@ app.use(function(req, res, next) {
   next();
 });
 
+// get AllUser
+app.get('/users', (req,res,next) =>{
+  User.find({}, function(err, users) {
+    if (err) throw err;
+    // object of all the users
+    res.json(users);
+  });
+})
+
 
 //post user
 app.post('/user', (req, res) => {
 
-  var userData = req.body;
+  var userData = req.body.data;
 
   for(var user in userData){
       new User({
