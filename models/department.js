@@ -7,7 +7,7 @@ var Department = mongoose.model('Department',{
     minlength : 1
   },
   head:{
-    type:String,
+    type:String, //user_ID
     minlength : 1
   },
   createdAt:{

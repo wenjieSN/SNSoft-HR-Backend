@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var Permission = mongoose.model('Permission',{
   permissionList:{
-    type:Array
+    type:Array 
   },
   code:{
     type:String

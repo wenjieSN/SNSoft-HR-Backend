@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var User = mongoose.model('User',{
-  email:{
+  username:{
     type:String,
     require:true,
     minlength : 1,
@@ -19,16 +19,16 @@ var User = mongoose.model('User',{
     type:String
   },
   userGroup:{
-    type:Number,
+    type:String,
   },
   department:{
-    type:String,
+    type:String, //department ID
   },
   position:{
-    type:String,
+    type:String, // position ID
   },
   supervisor:{
-    type:String,
+    type:String, //user_ID
   },
   createdAt:{
     type:Date,
