@@ -21,7 +21,6 @@ app.use(function(req, res, next) {
 app.post('/user', (req, res) => {
 
   var userData = req.body;
-  var docs = [];
   var newUser = [];
 
   userData.forEach((user) => {
@@ -35,7 +34,7 @@ app.post('/user', (req, res) => {
        position:user.position,
        supervisor:user.supervisor,
        contactNo:user.contctNo
-     })
+      })
     );
   },(err) =>{
     console.log(err);
