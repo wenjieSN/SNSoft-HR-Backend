@@ -1,12 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser'); //json -> object
 const ObjectID = require('mongodb').ObjectID;
+const _ = require('lodash');
 
 const mongoose = require('./server/dbConnect');
 const User = require('./models/user').User;
 const Department = require('./models/department').Department;
 
-var app = express();
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -76,6 +77,36 @@ app.get('/user/:id',(req,res)=>{
   },(e)=>{
       res.status(400).send(e);
   });
+});
+
+//update user
+app.patch('/user/:id',(req,res)=>{
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)){
+    console.log('invalid user');
+    return res.status(404).send();
+  }
+
+  var body = _.pick(req.body,[
+    'password',
+    'name',
+    'userGroup',
+    'department',
+    'position',
+    'supervisor',
+    'contactNo',
+    'lastModified'
+  ]);
+
+  User.findByIdAndUpdate(id,{$set:body},{new:true}).then((updatedUser) => {
+    if(!updatedUser){
+      return res.status(404).send();
+    }
+    res.send({updatedUser});
+  }).catch((e)=>{
+    res.status(400).send();
+  })
 });
 
 //post department
