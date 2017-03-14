@@ -10,10 +10,14 @@ const Department = require('./models/department').Department;
 const app = express();
 
 app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({extended: true}));
+
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,PATCH");
+
   next();
 });
 
@@ -21,9 +25,11 @@ app.use(function(req, res, next) {
 //post user
 app.post('/user', (req, res) => {
 
+
   console.log(req.body);
 
-  var userData = [req.body];
+  var userData = req.body.data;
+
   var newUser = [];
 
   userData.forEach((user) => {
@@ -36,7 +42,7 @@ app.post('/user', (req, res) => {
        department:user.department,
        position:user.position,
        supervisor:user.supervisor,
-       contactNo:user.contctNo,
+       contactNo:user.contactNo,
        status:user.status,
        indexID:user.indexID
       })
@@ -55,9 +61,11 @@ app.post('/user', (req, res) => {
 //get all User
 app.get('/user',(req,res)=>{
 
-  console.log(req);
+
   User.find().then((users)=>{
-    res.send(JSON.stringify(users));
+
+    res.json(users);
+
   },(e)=>{
       res.status(400).send(e);
   });
@@ -113,10 +121,37 @@ app.patch('/user/:id',(req,res)=>{
 });
 
 
+//post department
+app.post('/department', (req, res,next) => {
+  var department = new Department({
+    name:req.body.name,
+    head:req.body.head
+  });
+
+  user.save().then((doc) => {
+    res.send(doc);
+  }, (e) => {
+    res.status(400).send(e);
+  });
+});
+
+//get department
+app.get('/department',(req,res,next)=>{
+  User.find().then((departments)=>{
+    res.send({
+      departments
+    });
+  },(e)=>{
+      res.status(400).send(e);
+  });
+});
+
+
+
 
 //connect
-app.listen(3000, () => {
-  console.log('Started on port 3000');
+app.listen(3003, () => {
+  console.log('Started on port 3003');
 });
 
 module.exports = {
