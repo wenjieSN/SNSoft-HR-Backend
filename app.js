@@ -28,7 +28,7 @@ app.post('/user', (req, res) => {
 
   console.log(req.body);
 
-  var userData = [req.body];
+  var userData = req.body.data;
 
   var newUser = [];
 
@@ -42,7 +42,7 @@ app.post('/user', (req, res) => {
        department:user.department,
        position:user.position,
        supervisor:user.supervisor,
-       contactNo:user.contctNo,
+       contactNo:user.contactNo,
        status:user.status,
        indexID:user.indexID
       })
@@ -64,9 +64,7 @@ app.get('/user',(req,res)=>{
 
   User.find().then((users)=>{
 
-    res.json(
-      users
-    );
+    res.json(users);
 
   },(e)=>{
       res.status(400).send(e);
