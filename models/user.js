@@ -49,6 +49,9 @@ var User = mongoose.model('User',{
   status:{
     type:Number,
     default:1
+  },
+  indexID:{
+    type:String
   }
 });
 

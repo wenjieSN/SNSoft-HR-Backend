@@ -21,21 +21,15 @@ app.use(function(req, res, next) {
   next();
 });
 
-// get AllUser
-app.get('/users', (req,res,next) =>{
-  User.find({}, function(err, users) {
-    if (err) throw err;
-    // object of all the users
-    res.json(users);
-  });
-})
-
 
 //post user
 app.post('/user', (req, res) => {
 
 
-  var userData = req.body.data;
+  console.log(req.body);
+
+  var userData = [req.body];
+
   var newUser = [];
 
   userData.forEach((user) => {
@@ -48,7 +42,8 @@ app.post('/user', (req, res) => {
        department:user.department,
        position:user.position,
        supervisor:user.supervisor,
-       contactNo:user.contactNo,
+       contactNo:user.contctNo,
+       status:user.status,
        indexID:user.indexID
       })
     );
@@ -68,9 +63,11 @@ app.get('/user',(req,res)=>{
 
 
   User.find().then((users)=>{
+
     res.json(
       users
     );
+
   },(e)=>{
       res.status(400).send(e);
   });
@@ -88,7 +85,7 @@ app.get('/user/:id',(req,res)=>{
     if(!user){
       return res.status(404).send();
     }
-    res.send({user});
+    res.send(JSON.stringify(user));
   },(e)=>{
       res.status(400).send(e);
   });
@@ -119,11 +116,12 @@ app.patch('/user/:id',(req,res)=>{
     if(!updatedUser){
       return res.status(404).send();
     }
-    res.send({updatedUser});
+    res.send(JSON.stringify(updatedUser));
   }).catch((e)=>{
     res.status(400).send();
   })
 });
+
 
 //post department
 app.post('/department', (req, res,next) => {
@@ -149,7 +147,6 @@ app.get('/department',(req,res,next)=>{
       res.status(400).send(e);
   });
 });
-
 
 
 
