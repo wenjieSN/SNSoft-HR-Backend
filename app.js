@@ -55,9 +55,7 @@ app.get('/user',(req,res)=>{
 
   console.log(req);
   User.find().then((users)=>{
-    res.send({
-      users
-    });
+    res.send(JSON.stringify(users));
   },(e)=>{
       res.status(400).send(e);
   });
@@ -75,7 +73,7 @@ app.get('/user/:id',(req,res)=>{
     if(!user){
       return res.status(404).send();
     }
-    res.send({user});
+    res.send(JSON.stringify(user));
   },(e)=>{
       res.status(400).send(e);
   });
@@ -106,7 +104,7 @@ app.patch('/user/:id',(req,res)=>{
     if(!updatedUser){
       return res.status(404).send();
     }
-    res.send({updatedUser});
+    res.send(JSON.stringify(updatedUser));
   }).catch((e)=>{
     res.status(400).send();
   })

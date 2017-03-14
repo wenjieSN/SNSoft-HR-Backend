@@ -26,33 +26,6 @@ var Department = mongoose.model('Department',{
 });
 
 
-
-// //post department
-// app.post('/department', (req, res) => {
-//   var department = new Department({
-//     name:req.body.name,
-//     head:req.body.head
-//   });
-//
-//   user.save().then((doc) => {
-//     res.send(doc);
-//   }, (e) => {
-//     res.status(400).send(e);
-//   });
-// });
-//
-// //get department
-// app.get('/department',(req,res)=>{
-//   User.find().then((departments)=>{
-//     res.send({
-//       departments
-//     });
-//   },(e)=>{
-//       res.status(400).send(e);
-//   });
-// });
-
-
 module.exports ={
   Department
 }
