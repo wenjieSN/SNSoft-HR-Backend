@@ -15,6 +15,9 @@ var Department = mongoose.model('Department',{
     default:Date.now,
     require:true
   },
+  indexID:{
+    type:String
+  },
   lastModified:{
     type:Date
   },

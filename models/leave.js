@@ -14,7 +14,7 @@ var Leave = mongoose.model('Leave',{
   from:{
     type:Date,
     require:true
-  }
+  },
   to:{
     type:Date,
     require:true
@@ -36,6 +36,9 @@ var Leave = mongoose.model('Leave',{
   },
   lastModified:{
     type:Date
+  },
+  indexID:{
+    type:String
   },
   status:{
     type:Number,
