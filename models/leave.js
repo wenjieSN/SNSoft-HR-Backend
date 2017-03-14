@@ -27,7 +27,7 @@ var Leave = mongoose.model('Leave',{
     require:true
   },
   approveBy:{
-    type:String
+    type:String// user_ID
   },
   createdAt:{
     type:Date,

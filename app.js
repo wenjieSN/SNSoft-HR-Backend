@@ -1,50 +1,65 @@
 const express = require('express');
 const bodyParser = require('body-parser'); //json -> object
+const ObjectID = require('mongodb').ObjectID;
 
 const mongoose = require('./server/dbConnect');
 const User = require('./models/user').User;
 const Department = require('./models/department').Department;
 
-
 var app = express();
 
 app.use(bodyParser.json());
+
+app.use(bodyParser.urlencoded({extended: true}));
+
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 
-// get AllUser
-app.get('/users', (req,res,next) =>{
-  User.find({}, function(err, users) {
-    if (err) throw err;
-    // object of all the users
-    res.json(users);
-  });
-})
-
 
 //post user
-app.post('/user', (req, res,next) => {
-  var user = new User({
-    email:req.body.data.username,
-    password:req.body.data.userpwd,
-    name:req.body.data.fullname,
-    userGroup:req.body.data.usergroup,
-    department:req.body.data.department,
-    position:req.body.data.position,
-    supervisor:req.body.data.supervisor,
-    contactNo:req.body.data.contactno,
-    indexID:req.body.data.indexID
-  });
+app.post('/user', (req, res) => {
 
-  user.save().then((doc) => {
-    // res.send(doc);
-    res.status(201).json(doc)
-  }, (e) => {
-    res.status(400).send(e);
-  });
+  var userData = req.body;
+
+  for(var user in userData){
+      new User({
+        username:userData[user].username,
+        password:userData[user].password,
+        name:userData[user].name,
+        userGroup:userData[user].userGroup,
+        department:userData[user].department,
+        position:userData[user].position,
+        supervisor:userData[user].supervisor,
+        contactNo:userData[user].contactNo
+      })
+      .save()
+      .then((doc)=>{
+        res.send(doc);
+      },(e)=>{
+        res.status(400).send(e);
+      });
+  }
+
+  // var user = new User({
+  //   username:req.body.username,
+  //   password:req.body.password,
+  //   name:req.body.name,
+  //   userGroup:req.body.userGroup,
+  //   department:req.body.department,
+  //   position:req.body.position,
+  //   supervisor:req.body.supervisor,
+  //   contactNo:req.body.contactNo
+  // });
+  //
+  // user.save().then((doc) => {
+  //   res.send(doc);
+  // }, (e) => {
+  //   res.status(400).send(e);
+  // });
+
 });
 
 //get User
@@ -82,6 +97,7 @@ app.get('/department',(req,res,next)=>{
       res.status(400).send(e);
   });
 });
+
 
 
 
