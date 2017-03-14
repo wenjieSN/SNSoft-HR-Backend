@@ -16,6 +16,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,PATCH");
+
   next();
 });
 
@@ -33,7 +35,7 @@ app.get('/users', (req,res,next) =>{
 app.post('/user', (req, res) => {
 
 
-  var userData = req.body;
+  var userData = req.body.data;
   var newUser = [];
 
   userData.forEach((user) => {
@@ -46,7 +48,8 @@ app.post('/user', (req, res) => {
        department:user.department,
        position:user.position,
        supervisor:user.supervisor,
-       contactNo:user.contctNo
+       contactNo:user.contactNo,
+       indexID:user.indexID
       })
     );
   },(err) =>{
@@ -65,9 +68,9 @@ app.get('/user',(req,res)=>{
 
 
   User.find().then((users)=>{
-    res.send({
+    res.json(
       users
-    });
+    );
   },(e)=>{
       res.status(400).send(e);
   });
@@ -108,7 +111,8 @@ app.patch('/user/:id',(req,res)=>{
     'position',
     'supervisor',
     'contactNo',
-    'lastModified'
+    'lastModified',
+    'status'
   ]);
 
   User.findByIdAndUpdate(id,{$set:body},{new:true}).then((updatedUser) => {
