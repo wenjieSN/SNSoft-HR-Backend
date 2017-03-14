@@ -25,10 +25,9 @@ app.use(function(req, res, next) {
 //post user
 app.post('/user', (req, res) => {
 
+  var userData = req.body;
 
-  console.log(req.body);
-
-  var userData = req.body.data;
+  console.log(userData);
 
   var newUser = [];
 
@@ -83,13 +82,17 @@ app.get('/user/:id',(req,res)=>{
     if(!user){
       return res.status(404).send();
     }
+
     res.send(JSON.stringify(user));
   },(e)=>{
       res.status(400).send(e);
   });
 });
 
-//update user
+
+
+
+//bulk update user
 app.patch('/user/:id',(req,res)=>{
   var id = req.params.id;
 
@@ -121,30 +124,30 @@ app.patch('/user/:id',(req,res)=>{
 });
 
 
-//post department
-app.post('/department', (req, res,next) => {
-  var department = new Department({
-    name:req.body.name,
-    head:req.body.head
-  });
-
-  user.save().then((doc) => {
-    res.send(doc);
-  }, (e) => {
-    res.status(400).send(e);
-  });
-});
-
-//get department
-app.get('/department',(req,res,next)=>{
-  User.find().then((departments)=>{
-    res.send({
-      departments
-    });
-  },(e)=>{
-      res.status(400).send(e);
-  });
-});
+// //post department
+// app.post('/department', (req, res,next) => {
+//   var department = new Department({
+//     name:req.body.name,
+//     head:req.body.head
+//   });
+//
+//   user.save().then((doc) => {
+//     res.send(doc);
+//   }, (e) => {
+//     res.status(400).send(e);
+//   });
+// });
+//
+// //get department
+// app.get('/department',(req,res,next)=>{
+//   User.find().then((departments)=>{
+//     res.send({
+//       departments
+//     });
+//   },(e)=>{
+//       res.status(400).send(e);
+//   });
+// });
 
 
 
