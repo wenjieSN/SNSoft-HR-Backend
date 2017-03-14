@@ -21,9 +21,11 @@ app.use(function(req, res, next) {
 app.post('/user', (req, res) => {
 
   var userData = req.body;
+  var docs = [];
+  var newUser = [];
 
   for(var user in userData){
-      new User({
+       newUser[user] = new User({
         username:userData[user].username,
         password:userData[user].password,
         name:userData[user].name,
@@ -32,14 +34,21 @@ app.post('/user', (req, res) => {
         position:userData[user].position,
         supervisor:userData[user].supervisor,
         contactNo:userData[user].contactNo
-      })
-      .save()
+      });
+
+      newUser[user].save()
       .then((doc)=>{
-        res.send(doc);
+        // res.send(doc);
+        docs.push(doc);
+        if(docs.length == userData.length){
+          console.log(docs);
+          res.send(docs);
+        }
       },(e)=>{
         res.status(400).send(e);
       });
   }
+
 
   // var user = new User({
   //   username:req.body.username,
@@ -61,9 +70,31 @@ app.post('/user', (req, res) => {
 
 //get User
 app.get('/user',(req,res)=>{
+
+  console.log(req);
   User.find().then((users)=>{
     res.send({
       users
+    });
+  },(e)=>{
+      res.status(400).send(e);
+  });
+});
+
+//get User by ObjectID
+app.get('/user/:id',(req,res)=>{
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }
+
+  User.findById(id).then((user)=>{
+    if(!user){
+      return res.status(404).send();
+    }
+    res.send({
+      user
     });
   },(e)=>{
       res.status(400).send(e);
