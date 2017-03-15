@@ -22,6 +22,9 @@ var departmentSchema = new Schema({
   status:{
     type:Number,
     default:1
+  },
+  indexID:{
+    type:String
   }
 });
 

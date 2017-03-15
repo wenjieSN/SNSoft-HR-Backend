@@ -186,7 +186,8 @@ app.post('/department', (req, res) => {
        head:department.head,
        createdAt:department.createdAt,
        lastModified:department.lastModified,
-       status:department.status
+       status:department.status,
+       indexID:department.indexID
       })
     );
   },(err) =>{
@@ -227,7 +228,7 @@ app.patch('/department/:id',(req,res)=>{
 });
 
 
-//bulk update user
+//bulk update department
 app.patch('/department',(req,res)=>{
   var departments = req.body;
   var finalUpdated = [];
@@ -256,6 +257,137 @@ app.patch('/department',(req,res)=>{
       console.log(e);
   });
 });
+
+
+/***********************************************leave************************************************/
+//get all leave
+app.get('/leave',(req,res)=>{
+  Leave.find().then((leaves)=>{
+    res.json(leaves);
+  },(e)=>{
+      res.status(400).send(e);
+  });
+});
+
+//get department by ObjectID
+app.get('/leave/:id',(req,res)=>{
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }
+
+  Leave.findById(id).then((leave)=>{
+    if(!leave){
+      return res.status(404).send();
+    }
+    res.json(leave);
+  },(e)=>{
+      res.status(400).send(e);
+  });
+});
+
+//create department
+app.post('/leave', (req, res) => {
+  var leaveData = req.body;
+  var newLeave = [];
+
+  leaveData.forEach((leave) => {
+    newLeave.push(
+      new Leave({
+       user:leave.user,
+       type:leave.type,
+       from:leave.from,
+       to:leave.to,
+       description:leave.description,
+       approveStatus:leave.approveStatus,
+       approveBy:leave.approveBy,
+       createdAt:leave.createdAt,
+       lastModified:leave.lastModified,
+       status:leave.status,
+       indexID:leave.indexID
+      })
+    );
+  },(err) =>{
+    console.log(err);
+  });
+
+  Leave.create(newLeave).then((doc) => {
+    res.status(201).json(doc);
+  }, (e) => {
+    res.status(400).send(e);
+  });
+});
+
+//update department by id
+app.patch('/leave/:id',(req,res)=>{
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)){
+    console.log('invalid leave');
+    return res.status(404).send();
+  }
+
+  var body = _.pick(req.body,[
+    "user",
+    "type",
+    "from",
+    "to",
+    "user",
+    "description",
+    "approveStatus",
+    "approveBy",
+    "lastModified",
+    "status"
+  ]);
+
+  Leave.findByIdAndUpdate(id,{$set:body},{new:true}).then((updatedLeave) => {
+    if(!updatedLeave){
+      return res.status(404).send();
+    }
+    res.json(updatedLeave);
+  }).catch((e)=>{
+    res.status(400).send();
+  });
+});
+
+
+//bulk update department
+app.patch('/leave',(req,res)=>{
+  var leaves = req.body;
+  var finalUpdated = [];
+
+  async.each(leaves, (leave) => {
+    var body = _.pick(leave,[
+      "user",
+      "type",
+      "from",
+      "to",
+      "user",
+      "description",
+      "approveStatus",
+      "approveBy",
+      "lastModified",
+      "status"
+    ]);
+
+    Leave.findByIdAndUpdate(leave._id,{$set:body},{new:true}).then((updatedLeave) => {
+      if(!updatedLeave){
+        return res.status(404).send();
+      }
+      finalUpdated.push(updatedLeave);
+      if(finalUpdated.length == leaves.length){
+        res.json(finalUpdated);
+      }
+    }).catch((e)=>{
+      res.status(400).send();
+    });
+  }, (e) => {
+      console.log('error leave \n');
+      console.log(e);
+  });
+});
+
 
 
 //connect
