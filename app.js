@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser'); //json -> object
 const ObjectID = require('mongodb').ObjectID;
 const _ = require('lodash');
+const async = require('async');
 
 const mongoose = require('./server/dbConnect');
 const User = require('./models/user').User;
@@ -90,9 +91,7 @@ app.get('/user/:id',(req,res)=>{
 });
 
 
-
-
-//bulk update user
+//update user by id
 app.patch('/user/:id',(req,res)=>{
   var id = req.params.id;
 
@@ -117,11 +116,54 @@ app.patch('/user/:id',(req,res)=>{
     if(!updatedUser){
       return res.status(404).send();
     }
-    res.send(JSON.stringify(updatedUser));
+    res.json(updatedUser);
   }).catch((e)=>{
     res.status(400).send();
-  })
+  });
+
 });
+
+
+
+//bulk update user
+app.patch('/user',(req,res)=>{
+  var users = req.body;
+  var finalUpdated = [];
+
+  async.each(users, (user) => {
+
+    var body = _.pick(user,[
+      'password',
+      'name',
+      'userGroup',
+      'department',
+      'position',
+      'supervisor',
+      'contactNo',
+      'lastModified',
+      'status'
+    ]);
+
+    User.findByIdAndUpdate(user._id,{$set:body},{new:true}).then((updatedUser) => {
+      if(!updatedUser){
+        return res.status(404).send();
+      }
+
+      finalUpdated.push(updatedUser);
+      if(finalUpdated.length == users.length){
+        res.json(finalUpdated);
+      }
+
+    }).catch((e)=>{
+      res.status(400).send();
+    });
+  }, (e) => {
+      console.log('error users \n');
+      console.log(e);
+  });
+
+});
+
 
 
 // //post department
