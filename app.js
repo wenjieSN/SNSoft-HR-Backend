@@ -210,6 +210,32 @@ app.post('/department', (req, res,next) => {
   });
 });
 
+//bulk update user
+app.patch('/department/:id',(req,res)=>{
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)){
+    console.log('invalid user');
+    return res.status(404).send();
+  }
+
+  var body = _.pick(req.body.data,[
+    'name',
+    'head',
+    'lastModified',
+    'status'
+  ]);
+
+  Department.findByIdAndUpdate(id,{$set:body},{new:true}).then((updatedUser) => {
+    if(!updatedUser){
+      return res.status(404).send();
+    }
+    res.send(JSON.stringify(updatedUser));
+  }).catch((e)=>{
+    res.status(400).send();
+  })
+});
+
 app.get('/department/:id',(req,res)=>{
   var id = req.params.id;
 
@@ -260,6 +286,8 @@ app.get('/department',(req,res,next)=>{
       res.status(400).send(e);
   });
 });
+
+
 
 ////////
 // leave
