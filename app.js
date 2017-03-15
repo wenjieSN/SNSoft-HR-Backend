@@ -102,7 +102,7 @@ app.patch('/user/:id',(req,res)=>{
     return res.status(404).send();
   }
 
-  var body = _.pick(req.body,[
+  var body = _.pick(req.body.data,[
     'password',
     'name',
     'userGroup',
