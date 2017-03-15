@@ -1,6 +1,8 @@
 const mongoose = require('./../server/dbConnect').mongoose;
+const Schema = mongoose.Schema;
 
-var Leave = mongoose.model('Leave',{
+
+var leaveSchema = new Schema({
   user:{
     type:String,
     require:true,
@@ -43,6 +45,7 @@ var Leave = mongoose.model('Leave',{
   }
 });
 
+var Leave = mongoose.model('Leave', leaveSchema);
 
 module.exports ={
   Leave

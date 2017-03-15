@@ -11,25 +11,18 @@ const Leave = require('./models/leave').Leave;
 const app = express();
 
 app.use(bodyParser.json());
-
 app.use(bodyParser.urlencoded({extended: true}));
-
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,PATCH");
-
   next();
 });
 
-
+/***********************************************user************************************************/
 //post user
 app.post('/user', (req, res) => {
-
   var userData = req.body;
-
-  console.log(userData);
-
   var newUser = [];
 
   userData.forEach((user) => {
@@ -60,11 +53,8 @@ app.post('/user', (req, res) => {
 
 //get all User
 app.get('/user',(req,res)=>{
-
   User.find().then((users)=>{
-
     res.json(users);
-
   },(e)=>{
       res.status(400).send(e);
   });
@@ -88,7 +78,6 @@ app.get('/user/:id',(req,res)=>{
       res.status(400).send(e);
   });
 });
-
 
 //update user by id
 app.patch('/user/:id',(req,res)=>{
@@ -119,9 +108,7 @@ app.patch('/user/:id',(req,res)=>{
   }).catch((e)=>{
     res.status(400).send();
   });
-
 });
-
 
 
 //bulk update user
@@ -130,7 +117,6 @@ app.patch('/user',(req,res)=>{
   var finalUpdated = [];
 
   async.each(users, (user) => {
-
     var body = _.pick(user,[
       'password',
       'name',
@@ -147,12 +133,10 @@ app.patch('/user',(req,res)=>{
       if(!updatedUser){
         return res.status(404).send();
       }
-
       finalUpdated.push(updatedUser);
       if(finalUpdated.length == users.length){
         res.json(finalUpdated);
       }
-
     }).catch((e)=>{
       res.status(400).send();
     });
@@ -160,7 +144,117 @@ app.patch('/user',(req,res)=>{
       console.log('error users \n');
       console.log(e);
   });
+});
 
+/***********************************************department************************************************/
+//get all department
+app.get('/department',(req,res)=>{
+  Department.find().then((departments)=>{
+    res.json(departments);
+  },(e)=>{
+      res.status(400).send(e);
+  });
+});
+
+//get department by ObjectID
+app.get('/department/:id',(req,res)=>{
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }
+
+  Department.findById(id).then((department)=>{
+    if(!department){
+      return res.status(404).send();
+    }
+    res.json(department);
+  },(e)=>{
+      res.status(400).send(e);
+  });
+});
+
+//create department
+app.post('/department', (req, res) => {
+  var departmentData = req.body;
+  var newDepartment = [];
+
+  departmentData.forEach((department) => {
+    newDepartment.push(
+      new User({
+       name:department.name,
+       head:department.head,
+       createdAt:department.createdAt,
+       lastModified:department.lastModified,
+       status:department.status
+      })
+    );
+  },(err) =>{
+    console.log(err);
+  });
+
+  Department.create(newDepartment).then((doc) => {
+    res.status(201).json(doc);
+  }, (e) => {
+    res.status(400).send(e);
+  });
+});
+
+//update department by id
+app.patch('/department/:id',(req,res)=>{
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)){
+    console.log('invalid user');
+    return res.status(404).send();
+  }
+
+  var body = _.pick(req.body,[
+    'name',
+    'head',
+    'status',
+    'lastModified'
+  ]);
+
+  Department.findByIdAndUpdate(id,{$set:body},{new:true}).then((updatedDepartment) => {
+    if(!updatedDepartment){
+      return res.status(404).send();
+    }
+    res.json(updatedDepartment);
+  }).catch((e)=>{
+    res.status(400).send();
+  });
+});
+
+
+//bulk update user
+app.patch('/department',(req,res)=>{
+  var departments = req.body;
+  var finalUpdated = [];
+
+  async.each(departments, (department) => {
+    var body = _.pick(department,[
+      'name',
+      'head',
+      'status',
+      'lastModified'
+    ]);
+
+    Department.findByIdAndUpdate(department._id,{$set:body},{new:true}).then((updatedDepartment) => {
+      if(!updatedDepartment){
+        return res.status(404).send();
+      }
+      finalUpdated.push(updatedDepartment);
+      if(finalUpdated.length == departments.length){
+        res.json(finalUpdated);
+      }
+    }).catch((e)=>{
+      res.status(400).send();
+    });
+  }, (e) => {
+      console.log('error departments \n');
+      console.log(e);
+  });
 });
 
 

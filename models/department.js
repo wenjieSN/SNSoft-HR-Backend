@@ -1,6 +1,7 @@
-var mongoose = require('mongoose');
+const mongoose = require('./../server/dbConnect').mongoose;
+const Schema = mongoose.Schema;
 
-var Department = mongoose.model('Department',{
+var departmentSchema = new Schema({
   name:{
     type:String,
     require:true,
@@ -22,9 +23,9 @@ var Department = mongoose.model('Department',{
     type:Number,
     default:1
   }
-
 });
 
+var Department = mongoose.model('Department', departmentSchema);
 
 module.exports ={
   Department
