@@ -18,6 +18,9 @@ var Permission = mongoose.model('Permission',{
   lastModified:{
     type:Date
   },
+  indexID:{
+    type:String
+  },
   status:{
     type:Number,
     default:1

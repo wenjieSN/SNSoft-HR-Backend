@@ -7,6 +7,7 @@ const mongoose = require('./server/dbConnect');
 const User = require('./models/user').User;
 const Department = require('./models/department').Department;
 const Leave = require('./models/leave').Leave;
+const Permission = require('./models/permission').Permission;
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.use(function(req, res, next) {
 //post user
 app.post('/user', (req, res) => {
 
-  var userData = req.body.data;
+  var userData = req.body;
 
   console.log(userData);
 
@@ -102,7 +103,7 @@ app.patch('/user/:id',(req,res)=>{
     return res.status(404).send();
   }
 
-  var body = _.pick(req.body.data,[
+  var body = _.pick(req.body,[
     'password',
     'name',
     'userGroup',
@@ -152,7 +153,7 @@ app.patch('/user/:id',(req,res)=>{
 
 app.post('/user', (req, res) => {
 
-  var userData = req.body.data;
+  var userData = req.body;
 
   console.log(userData);
 
@@ -190,7 +191,7 @@ app.post('/user', (req, res) => {
 
 app.post('/department', (req, res,next) => {
 
-  var datas = req.body.data;
+  var datas = req.body;
   console.log(datas);
   var depts = [];
   datas.forEach(function(data){
@@ -219,7 +220,7 @@ app.patch('/department/:id',(req,res)=>{
     return res.status(404).send();
   }
 
-  var body = _.pick(req.body.data,[
+  var body = _.pick(req.body,[
     'name',
     'head',
     'lastModified',
@@ -256,7 +257,7 @@ app.get('/department/:id',(req,res)=>{
 app.post('/department/:id',(req,res)=>{
   var id = req.params.id;
 
-  var data = req.body.data;
+  var data = req.body;
 
   if(!ObjectID.isValid(id)){
     return res.status(404).send();
@@ -294,7 +295,7 @@ app.get('/department',(req,res,next)=>{
 ////////
 app.post('/leave', (req, res,next) => {
 
-  var datas = req.body.data;
+  var datas = req.body;
   console.log(datas);
   var leaves = [];
   datas.forEach(function(data){
@@ -353,7 +354,7 @@ app.get('/leave/:id',(req,res)=>{
 app.post('/leave/:id',(req,res)=>{
   var id = req.params.id;
 
-  var data = req.body.data;
+  var data = req.body;
 
   if(!ObjectID.isValid(id)){
     return res.status(404).send();
@@ -386,7 +387,114 @@ app.get('/leave',(req,res,next)=>{
 
 
 
+/////////////
+// Permission
+/////////////
 
+
+app.post('/permission', (req, res,next) => {
+
+  var datas = req.body;
+  console.log(datas);
+  var pms = [];
+  datas.forEach(function(data){
+    var pm = new Permission({
+      permissionList:data.permissionList,
+      code:data.code,
+      description:data.description,
+      lastModified:data.lastModified,
+      indexID:data.indexID
+    });
+
+    pms.push(pm);
+  })
+
+  Permission.create(pms).then((doc) => {
+    res.status(201).json(doc);
+  }, (e) => {
+    res.status(400).send(e);
+  });
+});
+
+//bulk update user
+app.patch('/permission/:id',(req,res)=>{
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)){
+    console.log('invalid user');
+    return res.status(404).send();
+  }
+
+  var body = _.pick(req.body,[
+    'permissionList',
+    'code',
+    'description',
+    'lastModified',
+    'status'
+  ]);
+
+  Permission.findByIdAndUpdate(id,{$set:body},{new:true}).then((updatePM) => {
+    if(!updatePM){
+      return res.status(404).send();
+    }
+    res.send(JSON.stringify(updatePM));
+  }).catch((e)=>{
+    res.status(400).send();
+  })
+});
+
+app.get('/permission/:id',(req,res)=>{
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }
+
+  Permission.findById(id).then((pm)=>{
+    if(!pm){
+      return res.status(404).send();
+    }
+    res.json(pm);
+  },(e)=>{
+      res.status(400).send(e);
+  });
+});
+
+app.post('/permission/:id',(req,res)=>{
+  var id = req.params.id;
+
+  var data = req.body;
+
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }
+  Permission.update({ _id: id }, { status:0  }, function (err, raw) {
+    if (err) return handleError(err);
+    console.log('The raw response from Mongo was ', raw);
+    res.status(201).json(raw)
+  });
+   // var dept = Department.findById(id).then(function(deptData){
+   //   console.log(deptData);
+   //   deptData.save(req.body.data,function(err, result){
+   //    console.log(err)
+   //        res.status(201).json(result);
+
+   //   });
+   // })
+
+})
+
+
+
+//get department
+app.get('/permission',(req,res,next)=>{
+  Permission.find().then((pms)=>{
+    res.json(pms);
+
+  },(e)=>{
+      res.status(400).send(e);
+  });
+});
 
 //connect
 app.listen(3003, () => {
