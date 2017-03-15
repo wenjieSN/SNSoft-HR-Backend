@@ -319,7 +319,7 @@ app.post('/leave', (req, res) => {
   });
 });
 
-//update department by id
+//update leave by id
 app.patch('/leave/:id',(req,res)=>{
   var id = req.params.id;
 
@@ -329,11 +329,9 @@ app.patch('/leave/:id',(req,res)=>{
   }
 
   var body = _.pick(req.body,[
-    "user",
     "type",
     "from",
     "to",
-    "user",
     "description",
     "approveStatus",
     "approveBy",
@@ -352,18 +350,16 @@ app.patch('/leave/:id',(req,res)=>{
 });
 
 
-//bulk update department
+//bulk update leave
 app.patch('/leave',(req,res)=>{
   var leaves = req.body;
   var finalUpdated = [];
 
   async.each(leaves, (leave) => {
     var body = _.pick(leave,[
-      "user",
       "type",
       "from",
       "to",
-      "user",
       "description",
       "approveStatus",
       "approveBy",
