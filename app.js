@@ -4,9 +4,9 @@ const ObjectID = require('mongodb').ObjectID;
 const _ = require('lodash');
 const async = require('async');
 
-const mongoose = require('./server/dbConnect');
 const User = require('./models/user').User;
 const Department = require('./models/department').Department;
+const Leave = require('./models/leave').Leave;
 
 const app = express();
 
@@ -60,7 +60,6 @@ app.post('/user', (req, res) => {
 
 //get all User
 app.get('/user',(req,res)=>{
-
 
   User.find().then((users)=>{
 
@@ -165,38 +164,9 @@ app.patch('/user',(req,res)=>{
 });
 
 
-
-// //post department
-// app.post('/department', (req, res,next) => {
-//   var department = new Department({
-//     name:req.body.name,
-//     head:req.body.head
-//   });
-//
-//   user.save().then((doc) => {
-//     res.send(doc);
-//   }, (e) => {
-//     res.status(400).send(e);
-//   });
-// });
-//
-// //get department
-// app.get('/department',(req,res,next)=>{
-//   User.find().then((departments)=>{
-//     res.send({
-//       departments
-//     });
-//   },(e)=>{
-//       res.status(400).send(e);
-//   });
-// });
-
-
-
-
 //connect
 app.listen(3003, () => {
-  console.log('Started on port 3003');
+  console.info('Started on port 3003');
 });
 
 module.exports = {

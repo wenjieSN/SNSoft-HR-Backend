@@ -1,11 +1,14 @@
-var mongoose = require('mongoose');
+const mongoose = require('./../server/dbConnect').mongoose;
+const Schema = mongoose.Schema;
+const uniqueValidator = require('mongoose-unique-validator');
 
-var User = mongoose.model('User',{
+var userSchema = new Schema({
   username:{
     type:String,
     require:true,
     minlength : 1,
-    trim : true
+    trim : true,
+    unique: true
   },
   password:{
     type:String,
@@ -38,12 +41,6 @@ var User = mongoose.model('User',{
   lastModified:{
     type:Date
   },
-  contactNo:{
-    type:String
-  },
-  indexID:{
-    type:String
-  },
   status:{
     type:Number,
     default:1
@@ -53,6 +50,9 @@ var User = mongoose.model('User',{
   }
 });
 
+userSchema.plugin(uniqueValidator);
+
+var User = mongoose.model('User', userSchema);
 
 module.exports ={
   User

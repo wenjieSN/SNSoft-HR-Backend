@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+const mongoose = require('./../server/dbConnect').mongoose;
 
 var Leave = mongoose.model('Leave',{
   user:{
@@ -14,7 +14,7 @@ var Leave = mongoose.model('Leave',{
   from:{
     type:Date,
     require:true
-  }
+  },
   to:{
     type:Date,
     require:true
