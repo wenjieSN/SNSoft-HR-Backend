@@ -24,32 +24,37 @@ app.use(function(req, res, next) {
 //post user
 app.post('/user', (req, res) => {
   var userData = req.body;
-  var newUser = [];
+  var newUser =[];
+  var error=[] ;
+  var users = [];
 
-  userData.forEach((user) => {
-    newUser.push(
-      new User({
-       username:user.username,
-       password:user.password,
-       name:user.name,
-       userGroup:user.userGroup,
-       department:user.department,
-       position:user.position,
-       supervisor:user.supervisor,
-       contactNo:user.contactNo,
-       status:user.status,
-       indexID:user.indexID
-      })
-    );
-  },(err) =>{
-    console.log(err);
-  });
+  for(var user in userData){
+     newUser[user] = new User({
+      username:userData[user].username,
+      password:userData[user].password,
+      name:userData[user].name,
+      userGroup:userData[user].userGroup,
+      department:userData[user].department,
+      position:userData[user].position,
+      supervisor:userData[user].supervisor,
+      contactNo:userData[user].contactNo
+    });
 
-  User.create(newUser).then((doc) => {
-    res.status(201).json(doc);
-  }, (e) => {
-    res.status(400).send(e);
-  });
+    newUser[user].save()
+    .then((doc)=>{
+      // res.send(doc);
+      users.push(doc);
+      if(users.length == userData.length){
+        console.log(users.length);
+        res.send(users);
+      }
+    },(e)=>{
+      error.push(e);
+      if((error.length + users.length)== userData.length){
+        res.status(400).json(error);
+      }
+    });
+  }
 });
 
 //get all User
