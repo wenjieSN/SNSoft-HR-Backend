@@ -50,12 +50,12 @@ app.post('/user', (req, res) => {
         res.json(users);
       }
     },(e)=>{
-      error.push(e.errors);
+      error.push(e);
       if((error.length + users.length)== userData.length){
         if(users.length>=1){
           error.push(users);
         }
-        res.status(404).json(error);
+        res.json(error);
       }
     });
   }
