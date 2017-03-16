@@ -42,16 +42,16 @@ app.post('/user', (req, res) => {
 
     newUser[user].save()
     .then((doc)=>{
-      // res.send(doc);
       users.push(doc);
-      if(users.length == userData.length){
-        console.log(users.length);
-        res.send(users);
+      if((users.length+error.length) == userData.length){
+        users.push(error);
+        res.json(users);
       }
     },(e)=>{
       error.push(e);
       if((error.length + users.length)== userData.length){
-        res.status(400).json(error);
+        error.push(users);
+        res.json(error);
       }
     });
   }
