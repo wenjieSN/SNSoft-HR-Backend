@@ -50,7 +50,7 @@ app.post('/user', (req, res) => {
         res.json(users);
       }
     },(e)=>{
-      error.push(e);
+      error.push(e.errors);
       if((error.length + users.length)== userData.length){
         if(users.length>=1){
           error.push(users);
