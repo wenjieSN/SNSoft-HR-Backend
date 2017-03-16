@@ -50,7 +50,8 @@ var userSchema = new Schema({
   }
 });
 
-userSchema.plugin(uniqueValidator);
+userSchema.plugin(uniqueValidator, { type: 'mongoose-unique-validator' });
+
 
 var User = mongoose.model('User', userSchema);
 

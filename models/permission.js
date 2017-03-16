@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var Permission = mongoose.model('Permission',{
   permissionList:{
-    type:Array 
+    type:Array
   },
   code:{
     type:String
@@ -21,6 +21,9 @@ var Permission = mongoose.model('Permission',{
   status:{
     type:Number,
     default:1
+  },
+  indexID:{
+    type:String
   }
 
 });

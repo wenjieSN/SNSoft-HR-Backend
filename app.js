@@ -7,6 +7,7 @@ const async = require('async');
 const User = require('./models/user').User;
 const Department = require('./models/department').Department;
 const Leave = require('./models/leave').Leave;
+const Permission = require('./models/permission').Permission;
 
 const app = express();
 
