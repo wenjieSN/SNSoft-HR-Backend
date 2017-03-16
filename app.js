@@ -27,6 +27,7 @@ app.post('/user', (req, res) => {
   var newUser =[];
   var error=[] ;
   var users = [];
+  var results = [];
 
   for(var user in userData){
      newUser[user] = new User({
@@ -42,20 +43,14 @@ app.post('/user', (req, res) => {
 
     newUser[user].save()
     .then((doc)=>{
-      users.push(doc);
-      if((users.length+error.length) == userData.length){
-        if(error.length>=1){
-          users.push(error);
-        }
-        res.json(users);
+      results.push(doc);
+      if(results.length == userData.length){
+        res.json(results);
       }
     },(e)=>{
-      error.push(e);
-      if((error.length + users.length)== userData.length){
-        if(users.length>=1){
-          error.push(users);
-        }
-        res.json(error);
+      results.push(e);
+      if(results.length == userData.length){
+        res.json(results);
       }
     });
   }
