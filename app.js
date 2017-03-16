@@ -25,8 +25,6 @@ app.use(function(req, res, next) {
 app.post('/user', (req, res) => {
   var userData = req.body;
   var newUser =[];
-  var error=[] ;
-  var users = [];
   var results = [];
 
   for(var user in userData){
@@ -107,11 +105,12 @@ app.patch('/user/:id',(req,res)=>{
 
   User.findByIdAndUpdate(id,{$set:body},{new:true}).then((updatedUser) => {
     if(!updatedUser){
-      return res.status(404).send();
+      console.log('no update');
+      return res.status(404).send('no update');
     }
     res.json(updatedUser);
   }).catch((e)=>{
-    res.status(400).send();
+    return res.status(400).json(e);
   });
 });
 
@@ -136,14 +135,14 @@ app.patch('/user',(req,res)=>{
 
     User.findByIdAndUpdate(user._id,{$set:body},{new:true}).then((updatedUser) => {
       if(!updatedUser){
-        return res.status(404).send();
+        return res.status(404).send('no update');
       }
       finalUpdated.push(updatedUser);
       if(finalUpdated.length == users.length){
         res.json(finalUpdated);
       }
     }).catch((e)=>{
-      res.status(400).send();
+      res.status(400).json(e);
     });
   }, (e) => {
       console.log('error users \n');
@@ -224,11 +223,11 @@ app.patch('/department/:id',(req,res)=>{
 
   Department.findByIdAndUpdate(id,{$set:body},{new:true}).then((updatedDepartment) => {
     if(!updatedDepartment){
-      return res.status(404).send();
+      return res.status(404).send('update error');
     }
     res.json(updatedDepartment);
   }).catch((e)=>{
-    res.status(400).send();
+    res.status(400).json(e);
   });
 });
 
@@ -248,14 +247,14 @@ app.patch('/department',(req,res)=>{
 
     Department.findByIdAndUpdate(department._id,{$set:body},{new:true}).then((updatedDepartment) => {
       if(!updatedDepartment){
-        return res.status(404).send();
+        return res.status(404).send('invalid department');
       }
       finalUpdated.push(updatedDepartment);
       if(finalUpdated.length == departments.length){
         res.json(finalUpdated);
       }
     }).catch((e)=>{
-      res.status(400).send();
+      res.status(400).json(e);
     });
   }, (e) => {
       console.log('error departments \n');
@@ -330,7 +329,7 @@ app.patch('/leave/:id',(req,res)=>{
 
   if(!ObjectID.isValid(id)){
     console.log('invalid leave');
-    return res.status(404).send();
+    return res.status(404).send('invalid leave');
   }
 
   var body = _.pick(req.body,[
@@ -346,11 +345,11 @@ app.patch('/leave/:id',(req,res)=>{
 
   Leave.findByIdAndUpdate(id,{$set:body},{new:true}).then((updatedLeave) => {
     if(!updatedLeave){
-      return res.status(404).send();
+      return res.status(404).send('invalid update');
     }
     res.json(updatedLeave);
   }).catch((e)=>{
-    res.status(400).send();
+    res.status(400).json(e);
   });
 });
 
@@ -374,14 +373,14 @@ app.patch('/leave',(req,res)=>{
 
     Leave.findByIdAndUpdate(leave._id,{$set:body},{new:true}).then((updatedLeave) => {
       if(!updatedLeave){
-        return res.status(404).send();
+        return res.status(404).send('invalid leave');
       }
       finalUpdated.push(updatedLeave);
       if(finalUpdated.length == leaves.length){
         res.json(finalUpdated);
       }
     }).catch((e)=>{
-      res.status(400).send();
+      res.status(400).json(e);
     });
   }, (e) => {
       console.log('error leave \n');
