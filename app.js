@@ -44,14 +44,18 @@ app.post('/user', (req, res) => {
     .then((doc)=>{
       users.push(doc);
       if((users.length+error.length) == userData.length){
-        users.push(error);
+        if(error.length>=1){
+          users.push(error);
+        }
         res.json(users);
       }
     },(e)=>{
       error.push(e);
       if((error.length + users.length)== userData.length){
-        error.push(users);
-        res.json(error);
+        if(users.length>=1){
+          error.push(users);
+        }
+        res.status(404).json(error);
       }
     });
   }
