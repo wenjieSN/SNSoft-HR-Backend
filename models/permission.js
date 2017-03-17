@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var Permission = mongoose.model('Permission',{
+
+var permissionSchema = new Schema({
   permissionList:{
     type:Array
   },
@@ -25,9 +27,9 @@ var Permission = mongoose.model('Permission',{
   indexID:{
     type:String
   }
-
 });
 
+var Permission = mongoose.model('Permission', permissionSchema);
 
 module.exports ={
   Permission

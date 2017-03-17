@@ -36,7 +36,8 @@ app.post('/user', (req, res) => {
       department:userData[user].department,
       position:userData[user].position,
       supervisor:userData[user].supervisor,
-      contactNo:userData[user].contactNo
+      contactNo:userData[user].contactNo,
+      indexID:userData[user].indexID
     });
 
     newUser[user].save()
@@ -384,6 +385,128 @@ app.patch('/leave',(req,res)=>{
     });
   }, (e) => {
       console.log('error leave \n');
+      console.log(e);
+  });
+});
+
+
+/***********************************************permission************************************************/
+//create permission
+app.post('/permission', (req, res) => {
+  var permissionData = req.body;
+  var newPermission =[];
+  var results = [];
+
+  for(var permission in permissionData){
+     newPermission[permission] = new Permission({
+      permissionList:permissionData[permission].permissionList,
+      code:permissionData[permission].code,
+      description:permissionData[permission].description,
+      createdAt:permissionData[permission].createdAt,
+      lastModified:permissionData[permission].lastModified,
+      status:permissionData[permission].status,
+      indexID:permissionData[permission].indexID
+    });
+
+    newPermission[permission].save()
+    .then((doc)=>{
+      results.push(doc);
+      if(results.length == permissionData.length){
+        res.json(results);
+      }
+    },(e)=>{
+      results.push(e);
+      if(results.length == permissionData.length){
+        res.json(results);
+      }
+    });
+  }
+});
+
+//get all permission
+app.get('/permission',(req,res)=>{
+  Permission.find().then((permissions)=>{
+    res.json(permissions);
+  },(e)=>{
+      res.status(400).json(e);
+  });
+});
+
+//get permission by ObjectID
+app.get('/permission/:id',(req,res)=>{
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send('invalid id');
+  }
+
+  Permission.findById(id).then((permission)=>{
+    if(!permission){
+      return res.status(404).send('no record');
+    }
+
+    res.send(JSON.stringify(permission));
+  },(e)=>{
+      res.status(400).send(e);
+  });
+});
+
+//update permission by id
+app.patch('/permission/:id',(req,res)=>{
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)){
+    console.log('invalid permission');
+    return res.status(404).send();
+  }
+
+  var body = _.pick(req.body,[
+    'permissionList',
+    'code',
+    'description',
+    'lastModified',
+    'status'
+  ]);
+
+  Permission.findByIdAndUpdate(id,{$set:body},{new:true}).then((updatedPermission) => {
+    if(!updatedPermission){
+      console.log('no update');
+      return res.status(404).send('no update');
+    }
+    res.json(updatedPermission);
+  }).catch((e)=>{
+    return res.status(400).json(e);
+  });
+});
+
+
+//bulk update permission
+app.patch('/permission',(req,res)=>{
+  var permissions = req.body;
+  var finalUpdated = [];
+
+  async.each(permissions, (permission) => {
+    var body = _.pick(permission,[
+      'permissionList',
+      'code',
+      'description',
+      'lastModified',
+      'status'
+    ]);
+
+    Permission.findByIdAndUpdate(permission._id,{$set:body},{new:true}).then((updatedPermission) => {
+      if(!updatedPermission){
+        return res.status(404).send('no update');
+      }
+      finalUpdated.push(updatedPermission);
+      if(finalUpdated.length == permission.length){
+        res.json(finalUpdated);
+      }
+    }).catch((e)=>{
+      res.status(400).json(e);
+    });
+  }, (e) => {
+      console.log('error permissions \n');
       console.log(e);
   });
 });
