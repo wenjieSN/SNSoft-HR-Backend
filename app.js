@@ -184,8 +184,9 @@ app.post('/department', (req, res) => {
   var newDepartment = [];
 
   departmentData.forEach((department) => {
+
     newDepartment.push(
-      new User({
+      new Department({
        name:department.name,
        head:department.head,
        createdAt:department.createdAt,
@@ -272,7 +273,7 @@ app.get('/leave',(req,res)=>{
   });
 });
 
-//get department by ObjectID
+//get leave by ObjectID
 app.get('/leave/:id',(req,res)=>{
   var id = req.params.id;
 
@@ -290,7 +291,7 @@ app.get('/leave/:id',(req,res)=>{
   });
 });
 
-//create department
+//create leave
 app.post('/leave', (req, res) => {
   var leaveData = req.body;
   var newLeave = [];
