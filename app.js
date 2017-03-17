@@ -59,7 +59,7 @@ app.get('/user',(req,res)=>{
   User.find().then((users)=>{
     res.json(users);
   },(e)=>{
-      res.status(400).send(e);
+      res.status(400).json(e);
   });
 });
 
@@ -68,12 +68,12 @@ app.get('/user/:id',(req,res)=>{
   var id = req.params.id;
 
   if(!ObjectID.isValid(id)){
-    return res.status(404).send();
+    return res.status(404).send('invalid id');
   }
 
   User.findById(id).then((user)=>{
     if(!user){
-      return res.status(404).send();
+      return res.status(404).send('no record');
     }
 
     res.send(JSON.stringify(user));
@@ -156,7 +156,7 @@ app.get('/department',(req,res)=>{
   Department.find().then((departments)=>{
     res.json(departments);
   },(e)=>{
-      res.status(400).send(e);
+      res.status(400).json(e);
   });
 });
 
@@ -165,12 +165,12 @@ app.get('/department/:id',(req,res)=>{
   var id = req.params.id;
 
   if(!ObjectID.isValid(id)){
-    return res.status(404).send();
+    return res.status(404).send('invalid ID');
   }
 
   Department.findById(id).then((department)=>{
     if(!department){
-      return res.status(404).send();
+      return res.status(404).send('no record');
     }
     res.json(department);
   },(e)=>{
@@ -201,7 +201,7 @@ app.post('/department', (req, res) => {
   Department.create(newDepartment).then((doc) => {
     res.status(201).json(doc);
   }, (e) => {
-    res.status(400).send(e);
+    res.status(400).json(e);
   });
 });
 
@@ -210,8 +210,7 @@ app.patch('/department/:id',(req,res)=>{
   var id = req.params.id;
 
   if(!ObjectID.isValid(id)){
-    console.log('invalid user');
-    return res.status(404).send();
+    return res.status(404).send('invalid ID');
   }
 
   var body = _.pick(req.body,[
@@ -278,12 +277,12 @@ app.get('/leave/:id',(req,res)=>{
   var id = req.params.id;
 
   if(!ObjectID.isValid(id)){
-    return res.status(404).send();
+    return res.status(404).send('ID invalid');
   }
 
   Leave.findById(id).then((leave)=>{
     if(!leave){
-      return res.status(404).send();
+      return res.status(404).send('no record');
     }
     res.json(leave);
   },(e)=>{
