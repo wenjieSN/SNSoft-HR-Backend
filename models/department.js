@@ -26,7 +26,7 @@ var departmentSchema = new Schema({
   indexID:{
     type:String
   }
-});
+}, {strict: false});
 
 var Department = mongoose.model('Department', departmentSchema);
 

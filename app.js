@@ -185,6 +185,7 @@ app.post('/department', (req, res) => {
   var newDepartment = [];
 
   departmentData.forEach((department) => {
+    console.info(department);
 
     newDepartment.push(
       new Department({
@@ -194,7 +195,7 @@ app.post('/department', (req, res) => {
        lastModified:department.lastModified,
        status:department.status,
        indexID:department.indexID
-      })
+     })
     );
   },(err) =>{
     console.log(err);
